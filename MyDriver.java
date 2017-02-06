@@ -14,7 +14,7 @@ public class MyDriver {
 
 		Configuration conf = new Configuration();
 		FileSystem fs = FileSystem.get(conf);
-		Job job = Job.getInstance(conf, "Inverted index");
+		Job job = Job.getInstance(conf, "Inverted index");//Job with name Inverted index
 		job.setJarByClass(second.MyDriver.class);
 		// TODO: specify mapper 
 		job.setMapperClass(MyMapper.class);
@@ -26,8 +26,8 @@ public class MyDriver {
 		job.setOutputValueClass(IntWritable.class);
 
 		// TODO: specify input and output DIRECTORIES (not files)
-		FileInputFormat.setInputPaths(job, new Path("/home/swapnil/Desktop/removetag/input"));
-		FileOutputFormat.setOutputPath(job, new Path("/home/swapnil/Desktop/removetag/output"));
+		FileInputFormat.setInputPaths(job, new Path("/home/swapnil/Desktop/removetag/input"));// input directory
+		FileOutputFormat.setOutputPath(job, new Path("/home/swapnil/Desktop/removetag/output"));// output directory
 		
 		if(fs.exists(new Path("/home/swapnil/Desktop/removetag/output"))){
 			   /*If exist delete the output path*/
