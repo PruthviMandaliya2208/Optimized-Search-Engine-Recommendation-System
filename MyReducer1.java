@@ -1,32 +1,38 @@
 package second;
 
 import java.io.IOException;
+import java.util.*;
 
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.ContentSummary;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 
-public class MyReducer1 extends Reducer<Text, IntWritable, Text, IntWritable>{
-	public void reduce(Text word, Iterable<IntWritable> counts, Context context) throws IOException, InterruptedException{	
-int sum=0;
-	/*Configuration conf = context.getConfiguration();
+public class MyReducer1 extends Reducer<Text, Text, Text, DoubleWritable>{
+	public void reduce(Text word, Iterable<Text> values, Context context) throws IOException, InterruptedException{	
+	DoubleWritable one = new DoubleWritable();
+	Configuration conf = context.getConfiguration();
 	FileSystem fs = FileSystem.get(conf);
-	Path pt = new Path("/user/swapnil/TF/input");
+	Path pt = new Path("/home/swapnil/Desktop/i");
 	ContentSummary cs = fs.getContentSummary(pt);
-	long totalDocuments = cs.getFileCount();		
-	//int sum = 0;
-	//double idf;
-	// String[] wordAndDocCounter = word.toString().split("\t");
-    /* String[] wordAndDoc = wordAndDocCounter[0].split("@");
-     context.write(new Text(wordAndDoc[1]), new Text(wordAndDoc[0] + "=" + wordAndDocCounter[1]));
-	/*for()*/
-	for(IntWritable count : counts){
-		sum += count.get();
+	long totalDocuments = cs.getFileCount();	
+	int sum=0;double idf;
+	HashSet<Text> uniqueDocIds = new HashSet<Text>();
+	for(Text docId : values)
+	{
+	  uniqueDocIds.add(new Text(docId));
 	}
-	//idf = Math.log((totalDocuments+1) / (sum));
+	 for(Text v : uniqueDocIds)
+	  {
+		  sum++;
+	  }
+	 idf = Math.log((double) (totalDocuments+1) / (double) (sum));
+	 one.set(idf);
+	 context.write(word,one);
 	
-	
-	context.write(word,new IntWritable(sum));
 	}
-
+	
 }
