@@ -5,7 +5,92 @@ import org.jsoup.select.Elements;
 import java.io.*;
 import java.util.*;
 import java.io.IOException;
+class RankCalculation{
 
+public int path[][] = new int[10][10];
+public double pagerank[] = new double[10];
+  
+public void calc(double totalNodes){
+     
+double InitialPageRank;
+double OutgoingLinks=0; 
+double DampingFactor = 0.85; 
+double TempPageRank[] = new double[10];
+ 
+int ExternalNodeNumber;
+int InternalNodeNumber; 
+int k=1;
+int ITERATION_STEP=1;
+ 
+InitialPageRank = 1/totalNodes;
+System.out.printf("  Number of Nodes :"+totalNodes+"\t Initial PageRank   :"+InitialPageRank+"\n");
+  
+
+for(k=1;k<=totalNodes;k++)
+{
+  this.pagerank[k]=InitialPageRank;
+}   
+   
+System.out.printf("\n Initial PageRank Values , 0th Step \n");
+for(k=1;k<=totalNodes;k++)
+{
+  System.out.printf(" Page Rank of "+k+" is :\t"+this.pagerank[k]+"\n");
+}  
+   
+ while(ITERATION_STEP<=2) 
+ {
+ 
+  for(k=1;k<=totalNodes;k++)
+ {  
+   TempPageRank[k]=this.pagerank[k];
+   this.pagerank[k]=0;
+  }
+     
+ for(InternalNodeNumber=1;InternalNodeNumber<=totalNodes;InternalNodeNumber++)
+ {
+  for(ExternalNodeNumber=1;ExternalNodeNumber<=totalNodes;ExternalNodeNumber++)
+   {
+    if(this.path[ExternalNodeNumber][InternalNodeNumber] == 1)
+    { 
+      k=1;
+      OutgoingLinks=0;  // Count the Number of Outgoing Links for each ExternalNodeNumber
+      while(k<=totalNodes)
+      {
+        if(this.path[ExternalNodeNumber][k] == 1 )
+        {
+          OutgoingLinks=OutgoingLinks+1; 
+        }  
+        k=k+1;  
+      } 
+          
+         this.pagerank[InternalNodeNumber]+=TempPageRank[ExternalNodeNumber]*(1/OutgoingLinks);    
+     }
+   }  
+ }    
+      
+    
+   
+     for(k=1;k<=totalNodes;k++) 
+      System.out.printf(" Page Rank of "+k+" is :\t"+this.pagerank[k]+"\n"); 
+   
+     ITERATION_STEP = ITERATION_STEP+1;
+}
+ 
+// Add the Damping Factor to PageRank
+for(k=1;k<=totalNodes;k++)
+{
+  this.pagerank[k]=(1-DampingFactor)+ DampingFactor*this.pagerank[k]; 
+  } 
+   
+// Display PageRank
+System.out.printf("\n Final Page Rank : \n"); 
+for(k=1;k<=totalNodes;k++)
+{
+ System.out.printf(" Page Rank of "+k+" is :\t"+this.pagerank[k]+"\n"); 
+  }
+   
+ }
+}
 public class PageRank {
 	public static String[] URL(String BaseFile) throws IOException{
 		File input = new File(BaseFile);
@@ -74,7 +159,7 @@ public class PageRank {
 			int indexCounter = 1;	
 			Arrays.sort(a);
 			int index[][] = new int[aSize][aSize];
-			float[] pageRankMatrix = new float[aSize*aSize];
+			int[] pageRankMatrix = new int[aSize*aSize];
 			int total[] = new int[aSize];
 			for(int k=0;k<a.length;k++){
 				total[k] = URL(a[k]).length;
@@ -94,16 +179,16 @@ public class PageRank {
 				}
 			}
 			int mm = 0;
-			for(int pp=0;pp<aSize;pp++){
+			/*for(int pp=0;pp<aSize;pp++){
 				System.out.println("total: " + total[pp]);
-			}
+			}*/
 			for(int p=0;p<(index.length*index.length);p++){
 				int trow = index.length;
 				int ttrow = 0;
 				if(p % trow == 0){
 					mm = p;
 					ttrow = p/trow;
-					System.out.println("p: "+ p +" ttrow: " + ttrow);
+					//System.out.println("p: "+ p +" ttrow: " + ttrow);
 				}
 				if(temp[p]!=0){
 					int tempp = temp[p];
@@ -115,9 +200,20 @@ public class PageRank {
 				for(int j=0;j<a.length;j++){
 					System.out.print(pageRankMatrix[i * a.length + j] + " ");
 				}
-				System.out.println();
+				System.out.println(total[i]+"");
 			}
-			System.out.println(" changed ");
+			int nodes,i,j,cost;
+        		nodes = a.length;
+        		RankCalculation p = new RankCalculation();
+        		for(i=0;i<nodes;i++)
+         		for(j=0;j<nodes;j++)
+          		{
+            			p.path[i][j]=pageRankMatrix[i * a.length + j];
+            			if(j==i)
+              			p.path[i][j]=0;
+          		}
+        		p.calc(nodes);
+			/*System.out.println(" changed ");
 			for(int i=0;i<a.length;i++){
 				for(int j=0;j<a.length;j++){
 					if(total[i]!=0){
@@ -126,12 +222,10 @@ public class PageRank {
 					System.out.print(pageRankMatrix[i * a.length + j] + " ");
 				}
 				System.out.println(" total: " + total[i]);
-			}
-			String [][] matrix = new String[aSize][aSize];
+			}*/
 		}catch(Exception e){
 			System.out.println(e);
 		}
 	
 	}
 }
-
