@@ -5,28 +5,29 @@ import org.jsoup.select.Elements;
 import java.io.*;
 import java.util.*;
 import java.io.IOException;
-class WebGraph{
+class WebGraph1{
 
 	public static void main(String args[]){
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter Starting URL from 'http',to calculate Graph :");
 		String URLInput = sc.nextLine();
 		try{
-			String a[] = webGraph(URLInput);
+			String a[] = WebGraph1(URLInput);
 			int aSize = a.length;
-			int[][] aa = new int[aSize][aSize];
-			for(int k=1;k<a.length;k++){
+			System.out.println(aSize);
+			for(int k=0;k<a.length;k++){
 				System.out.println("a: "+a[k]);
 			}
-			webGraph(URLInput);
 		}catch(Exception e){
 			System.out.println(e);
 		}
 	}
 
 	public static String[] URL(String BaseFile) throws IOException{
-		File input = new File(BaseFile);
-		Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
+		Document doc = Jsoup.connect(BaseFile).get();
+
+		//File input = new File(BaseFile);
+		//Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
 		Elements links = doc.select("a");
 		String textURL[] = new String[links.size()];
 		int i=0;
@@ -35,53 +36,26 @@ class WebGraph{
 		}
 		return textURL;	
 	}
-	private static String[] webGraph(String page) throws IOException{
+	private static String[] WebGraph1(String page) throws IOException{
+		ArrayList<String> finalist = new ArrayList<String>();
 		ArrayList<String> list=new ArrayList<String>();
 		list.add(page);
-
-		String[] URLS = URL(page); 
-		if(URLS != null){
-			int URLSsize = URLS.length;	
-			
-			/*System.out.println("Legth:"+URLSsize);*/
-
+		int counter = 0;
+		while(list.size()!=counter){
+			String[] URLS = URL(list.get(counter));
 			for(String opurl:URLS){
-				if(!list.contains(opurl)){
+				if(!list.contains(opurl) || !finalist.contains(opurl)){
+					finalist.add(opurl);
 					list.add(opurl);
 				}
 			}
-			for(int i=0;i<URLSsize;i++){	
-				/*System.out.println("1:"+URLS[i]);*/
-				String[] URLS1 = URL(URLS[i]);
-				//System.out.println("Legth:"+URLS.length);
-				if(URLS1 != null){
-					for(int j=0;j<URLS1.length;j++){
-						/*System.out.println("URLS1:"+URLS1[j]);*/
-						String[] URLS11 = URL(URLS1[j]);
-						if(URLS11 != null){
-							for(String opurl1:URLS11){
-								if(!list.contains(opurl1)){
-									list.add(opurl1);
-								}
-							}
-						}
-						for(String opurl1:URLS1){
-							if(!list.contains(opurl1)){
-								list.add(opurl1);
-							}
-						}
-					} //URLS1
-				} // URLS1
-				//System.out.println("i:"+URLS[i]);	
-			}
-		}//URLS
-
-		String returnArray[] = new String[list.size()];              
-		for(int j =0;j<list.size();j++){
-			returnArray[j] = list.get(j);
+			counter = counter+1;
+		}
+		String returnArray[] = new String[finalist.size()];              
+		for(int j =0;j<finalist.size();j++){
+			returnArray[j] = finalist.get(j);
+			System.out.println("finallist:"+returnArray[j]);
 		}
 		return returnArray;
 	}
-
-	
 }
