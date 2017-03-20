@@ -104,47 +104,24 @@ public class PageRank {
 		return textURL;	
 	}
 	private static String[] webGraph(String page) throws IOException{
+		ArrayList<String> finalist = new ArrayList<String>();
 		ArrayList<String> list=new ArrayList<String>();
 		list.add(page);
-
-		String[] URLS = URL(page); 
-		if(URLS != null){
-			int URLSsize = URLS.length;	
-
+		int counter = 0;
+		while(list.size()!=counter){
+			String[] URLS = URL(list.get(counter));
 			for(String opurl:URLS){
-				if(!list.contains(opurl)){
+				if(!list.contains(opurl) || !finalist.contains(opurl)){
+					finalist.add(opurl);
 					list.add(opurl);
 				}
 			}
-			for(int i=0;i<URLSsize;i++){	
-				/*System.out.println("1:"+URLS[i]);*/
-				String[] URLS1 = URL(URLS[i]);
-				//System.out.println("Legth:"+URLS.length);
-				if(URLS1 != null){
-					for(int j=0;j<URLS1.length;j++){
-						/*System.out.println("URLS1:"+URLS1[j]);*/
-						String[] URLS11 = URL(URLS1[j]);
-						if(URLS11 != null){
-							for(String opurl1:URLS11){
-								if(!list.contains(opurl1)){
-									list.add(opurl1);
-								}
-							}
-						}
-						for(String opurl1:URLS1){
-							if(!list.contains(opurl1)){
-								list.add(opurl1);
-							}
-						}
-					} //URLS1
-				} // URLS1
-				//System.out.println("i:"+URLS[i]);	
-			}
-		}//URLS
-
-		String returnArray[] = new String[list.size()];              
-		for(int j =0;j<list.size();j++){
-			returnArray[j] = list.get(j);
+			counter = counter+1;
+		}
+		String returnArray[] = new String[finalist.size()];              
+		for(int j =0;j<finalist.size();j++){
+			returnArray[j] = finalist.get(j);
+			System.out.println("finallist:"+returnArray[j]);
 		}
 		return returnArray;
 	}
