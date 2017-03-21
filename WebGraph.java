@@ -5,14 +5,14 @@ import org.jsoup.select.Elements;
 import java.io.*;
 import java.util.*;
 import java.io.IOException;
-class WebGraph1{
+class WebGraph{
 
 	public static void main(String args[]){
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Enter Starting URL from 'http',to calculate Graph :");
 		String URLInput = sc.nextLine();
 		try{
-			String a[] = WebGraph1(URLInput);
+			String a[] = WebGraph(URLInput);
 			int aSize = a.length;
 			System.out.println(aSize);
 			for(int k=0;k<a.length;k++){
@@ -24,10 +24,13 @@ class WebGraph1{
 	}
 
 	public static String[] URL(String BaseFile) throws IOException{
-		Document doc = Jsoup.connect(BaseFile).get();
+		//Document doc = Jsoup.connect(BaseFile).get();
 
-		//File input = new File(BaseFile);
-		//Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
+		File input = new File(BaseFile);
+		if(!input.exists()){
+			  throw new FileNotFoundException("Could not find file: " + input);
+		}
+		Document doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
 		Elements links = doc.select("a");
 		String textURL[] = new String[links.size()];
 		int i=0;
@@ -36,10 +39,12 @@ class WebGraph1{
 		}
 		return textURL;	
 	}
-	private static String[] WebGraph1(String page) throws IOException{
+	private static String[] WebGraph(String page) throws IOException{
 		ArrayList<String> finalist = new ArrayList<String>();
 		ArrayList<String> list=new ArrayList<String>();
 		list.add(page);
+		int flag = 0;
+		try{
 		int counter = 0;
 		while(list.size()!=counter){
 			String[] URLS = URL(list.get(counter));
@@ -50,6 +55,9 @@ class WebGraph1{
 				}
 			}
 			counter = counter+1;
+		}
+		}catch(FileNotFoundException fnfe){
+			flag = flag+1;
 		}
 		String returnArray[] = new String[finalist.size()];              
 		for(int j =0;j<finalist.size();j++){
