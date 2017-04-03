@@ -53,6 +53,7 @@ public class Results extends JFrame{
 				setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				c = getContentPane();
 				c.setLayout(null);
+				c.setBackground(Color.WHITE);
 				jlbLogo = new JLabel(new ImageIcon("images/Nexter.PNG"));
 				jlbLogo.setBounds(300,10,400,60);
 				c.add(jlbLogo);           
@@ -93,6 +94,8 @@ public class Results extends JFrame{
 	 jlb1[i].setText(p.text());					
      jlb[i].setBounds(10,wid,1000,60);
      jlb1[i].setBounds(10,wid1,1000,60);
+jlb[i].setForeground(Color.blue); 
+   jlb1[i].setForeground(Color.MAGENTA); 
      c.add(jlb[i]);	
      c.add(jlb1[i]);	
      jlb[i].addMouseListener(new MouseAdapter() 
@@ -103,7 +106,7 @@ public class Results extends JFrame{
         try {           
         	JLabel jlb = (JLabel)e.getComponent();
         	url = "/home/swapnil/Desktop/i/"+jlb.getText();
-            rt.exec("xdg-open " + url);            
+            rt.exec("xdg-open " + url);            //Opening webpage in default browser
         } catch (IOException ex) {
         }
 		}  
