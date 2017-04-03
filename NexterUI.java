@@ -26,6 +26,7 @@ public class NexterUI extends JFrame{
 			setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);	
 			c = getContentPane();
 			c.setLayout(null);
+			c.setBackground(Color.WHITE);
 			
 			jlbLogo = new JLabel(new ImageIcon("images/Nexter.PNG"));
 			jlbLogo.setBounds(245,125,500,90);
