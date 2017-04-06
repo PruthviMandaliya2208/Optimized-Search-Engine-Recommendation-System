@@ -105,8 +105,9 @@ jlb[i].setForeground(Color.blue);
 
         try {           
         	JLabel jlb = (JLabel)e.getComponent();
-        	url = "/home/swapnil/Desktop/i/"+jlb.getText();
-            rt.exec("xdg-open " + url);            //Opening webpage in default browser
+		url = "file:///home/swapnil/Desktop/i/"+jlb.getText();
+    		url=url.replaceAll(" ","%20");
+                rt.exec("xdg-open " + url);            //Opening webpage in default browser
         } catch (IOException ex) {
         }
 		}  
